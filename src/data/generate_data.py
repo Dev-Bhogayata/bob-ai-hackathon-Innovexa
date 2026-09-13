@@ -100,10 +100,20 @@ def generate_shocks(
 
 
 def generate_vessels(
-    rng: random.Random, start_time: datetime
+    rng: random.Random,
+    start_time: datetime,
+    berths: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
+    berth_limits = berths or [
+        {
+            "max_vessel_length_m": 400,
+            "min_depth_m": 16,
+            "assigned_crane_count": 6,
+        }
+    ]
     vessels: list[dict[str, Any]] = []
     for index in range(1, VESSEL_COUNT + 1):
+        compatible_berth = rng.choice(berth_limits)
         eta = start_time + timedelta(
             hours=rng.uniform(0, SIMULATION_DAYS * 24 - 36)
         )
@@ -116,6 +126,21 @@ def generate_vessels(
                 "eta": isoformat(eta),
                 "etd": isoformat(eta + timedelta(hours=port_hours)),
                 "teu_capacity": teu_capacity,
+                "vessel_length_m": rng.randrange(
+                    140,
+                    int(max(140, compatible_berth["max_vessel_length_m"])) + 1,
+                    10,
+                ),
+                "draft_m": round(
+                    rng.uniform(
+                        7.0,
+                        min(15.0, float(compatible_berth["min_depth_m"])),
+                    ),
+                    1,
+                ),
+                "required_cranes": rng.randint(
+                    1, int(max(1, compatible_berth["assigned_crane_count"]))
+                ),
                 "cargo_type": rng.choice(CARGO_TYPES),
                 "priority": rng.choices(PRIORITIES, weights=(65, 25, 10), k=1)[0],
                 "assigned_berth_id": f"B-{rng.randint(1, BERTH_COUNT):02d}",
@@ -233,9 +258,10 @@ def write_sqlite(
 def generate_dataset(seed: int = DEFAULT_SEED) -> dict[str, list[dict[str, Any]]]:
     rng = random.Random(seed)
     shocks = generate_shocks(rng, START_TIME)
+    berths = generate_berths(rng)
     return {
-        "vessels": generate_vessels(rng, START_TIME),
-        "berths": generate_berths(rng),
+        "vessels": generate_vessels(rng, START_TIME, berths),
+        "berths": berths,
         "yard_zones": generate_yard_zones(rng),
         "shocks": shocks,
         "arrival_stream": generate_arrival_stream(rng, START_TIME, shocks),

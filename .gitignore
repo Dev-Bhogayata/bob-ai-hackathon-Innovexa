@@ -18,5 +18,6 @@ frontend/.vite/
 data/raw/*
 data/processed/*
 data/generated/*
+data/models/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
