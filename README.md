@@ -121,6 +121,20 @@ for a supplied time window. Berth optimization runs only when a hotspot score
 is above 70; alternate-port routing runs only when a vessel's predicted delay
 is above 12 hours. Each step logs duration and JSON output size.
 
+## Backend API contracts
+
+The FastAPI application is in `backend/app/main.py` and exposes:
+
+- `GET /api/v1/timeline?start=<ISO-8601>&seed=42`: a typed 72-hour Gantt
+  payload containing berth lanes and vessel intervals.
+- `GET /api/v1/hotspots?as_of=<ISO-8601>&horizon_hours=24&seed=42`: typed
+  berth and yard pressure items with scores, factors, risk levels, and
+  recommended actions for a heatmap.
+- `GET /health`: service health check.
+
+Run locally with `uvicorn backend.app.main:app --reload`. These contracts are
+the stable backend boundary for the future React timeline and heatmap.
+
 ## Bob-assisted development log
 
 Key prompts, design decisions, and validation milestones are recorded in
@@ -153,3 +167,18 @@ messages = build_shift_supervisor_prompt(assignments)
 The prompt requires strict JSON with a headline, current operating facts,
 ranked berth risks, evidence-based reasons, recommended actions, and handoff
 watch items. The helper performs no network calls and requires no API key.
+
+## Run the integrated dashboard
+
+Start the API and frontend in separate terminals:
+
+```bash
+uvicorn backend.app.main:app --reload
+cd frontend
+npm install
+npm run dev
+```
+
+The React dashboard consumes the stable API contracts and renders the two
+demo-critical views: a 72-hour berth Gantt timeline and a berth/yard hotspot
+heatmap. Vite proxies `/api` requests to the local FastAPI server.
