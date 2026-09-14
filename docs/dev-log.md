@@ -11,7 +11,8 @@ FastAPI, OR-Tools, XGBoost, React, and SQLite.
 
 **Decision shaped by Bob:** Keep the concerns separated from the beginning:
 `src/data`, `src/scoring`, `src/ml`, `src/optimization`, `src/rerouting`,
-`src/llm`, and `src/agent`, with backend tests organized by capability.
+`src/llm`, `src/agent`, `src/backend`, and `src/frontend`, with backend tests
+organized by capability.
 Implementation was intentionally deferred until the structure was approved.
 
 ## 2026-09-13 — Synthetic operational data

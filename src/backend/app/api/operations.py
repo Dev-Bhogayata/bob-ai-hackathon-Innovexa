@@ -11,7 +11,7 @@ from src.data.generate_data import generate_dataset
 from src.scoring.berth_scoring import score_berths
 from src.optimization.berth_assignment import optimize_berth_assignments
 
-from backend.app.schemas.operations import (
+from src.backend.app.schemas.operations import (
     HotspotFactor,
     HotspotItem,
     HotspotResponse,

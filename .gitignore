@@ -15,6 +15,9 @@ build/
 coverage/
 .coverage
 frontend/.vite/
+src/frontend/.vite/
+src/frontend/dist/
+*.tsbuildinfo
 data/raw/*
 data/processed/*
 data/generated/*

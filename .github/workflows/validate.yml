@@ -1,0 +1,31 @@
+name: Validate Submission
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install YAML validator
+        run: python -m pip install pyyaml
+      - name: Validate required submission files
+        run: |
+          test -s submission.yaml
+          test -s README.md
+          test -s docs/problem-statement.md
+          test -s docs/solution-overview.md
+          test -s docs/architecture.md
+          test -s docs/setup-guide.md
+          test -s demo/demo-video-link.txt
+          test -s demo/live-demo-url.txt
+          test -s CONTRIBUTING.md
+          test -s src/README.md
+          python -c "import yaml; yaml.safe_load(open('submission.yaml'))"
+          ! grep -R "\[placeholder\]\|\[your-" README.md docs src/README.md
+          ! find . -type f \( -name '.env' -o -path '*/node_modules/*' -o -path '*/.venv/*' \) -print -quit | grep .

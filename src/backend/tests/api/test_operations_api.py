@@ -2,7 +2,7 @@ import unittest
 
 from fastapi.testclient import TestClient
 
-from backend.app.main import app
+from src.backend.app.main import app
 
 
 class OperationsApiTests(unittest.TestCase):

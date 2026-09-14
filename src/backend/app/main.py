@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from backend.app.api.operations import router as operations_router
+from src.backend.app.api.operations import router as operations_router
 
 app = FastAPI(
     title="PortFlow API",

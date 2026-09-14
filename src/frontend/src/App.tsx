@@ -56,7 +56,7 @@ export default function App() {
         </div>
       </section>
       {loading && <div className="state-card">Loading live operations data...</div>}
-      {error && <div className="state-card error">{error}. Start the API with <code>uvicorn backend.app.main:app --reload</code>.</div>}
+      {error && <div className="state-card error">{error}. Start the API with <code>uvicorn src.backend.app.main:app --reload</code>.</div>}
       {!loading && !error && timeline && hotspots && (
         <div className="dashboard-grid">
           <Timeline data={timeline} />

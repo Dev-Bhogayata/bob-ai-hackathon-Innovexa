@@ -1,0 +1,25 @@
+team:
+  name: "Innovexa"
+  track: "AI"
+  lead:
+    name: "Bhavya Godhaviya"
+    email: "contact via GitHub profile"
+  members:
+    - name: "Bhavya Godhaviya"
+      email: "contact via GitHub profile"
+
+submission:
+  title: "PortFlow"
+  problem_statement: >
+    Port shift supervisors need to coordinate vessel arrivals, berth capacity,
+    yard fill, and disruptions while congestion is changing.
+  solution_summary: >
+    PortFlow predicts vessel delay, schedules compatible berths with OR-Tools,
+    recommends alternate ports, and presents the reasoning in a supervisor
+    dashboard.
+  key_features:
+    - "XGBoost vessel delay prediction with feature importance"
+    - "OR-Tools CP-SAT berth scheduling with compatibility and no-overlap constraints"
+    - "Rule-based alternate-port ranking by distance and available capacity"
+    - "FastAPI contracts for a 72-hour Gantt timeline and hotspot heatmap"
+    - "React operations dashboard and structured Bob-assisted reasoning trace"
