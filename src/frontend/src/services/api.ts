@@ -1,6 +1,9 @@
 import type { HotspotResponse, TimelineResponse } from "../types/api";
 
-const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
+const rawBase =
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) ||
+  "https://portflow-backend-ooc0.onrender.com";
+const apiBase = rawBase.replace(/\/+$/, "");
 
 async function getJson<T>(path: string): Promise<T> {
   const response = await fetch(`${apiBase}${path}`);
