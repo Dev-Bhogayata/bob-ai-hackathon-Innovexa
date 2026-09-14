@@ -10,6 +10,9 @@ from fastapi import APIRouter, HTTPException, Query
 from src.data.generate_data import generate_dataset
 from src.scoring.berth_scoring import score_berths
 from src.optimization.berth_assignment import optimize_berth_assignments
+from src.optimization.resource_allocation import allocate_cranes, allocate_yard_zones
+from src.llm.shift_summary import build_shift_supervisor_prompt
+from src.llm.watsonx import generate_watsonx_summary
 
 from src.backend.app.schemas.operations import (
     HotspotFactor,
@@ -17,6 +20,8 @@ from src.backend.app.schemas.operations import (
     HotspotResponse,
     TimelineItem,
     TimelineResponse,
+    SupervisorSummaryRequest,
+    SupervisorSummaryResponse,
 )
 
 router = APIRouter(prefix="/api/v1", tags=["operations"])
@@ -63,9 +68,11 @@ def get_timeline(
         )
     try:
         assignments = optimize_berth_assignments(vessels, dataset["berths"])
+        yard_allocations = allocate_yard_zones(vessels, dataset["yard_zones"])
     except (RuntimeError, ValueError) as error:
         raise HTTPException(status_code=422, detail=str(error)) from error
     vessels_by_id = {vessel["vessel_id"]: vessel for vessel in vessels}
+    berths_by_id = {berth["berth_id"]: berth for berth in dataset["berths"]}
     items = []
     for assignment in assignments:
         vessel = vessels_by_id[assignment["vessel_id"]]
@@ -78,6 +85,12 @@ def get_timeline(
                 etd=datetime.fromisoformat(vessel["etd"]),
                 teu_capacity=int(vessel["teu_capacity"]),
                 status="delayed" if assignment["wait_hours"] > 0 else "scheduled",
+                crane_ids=allocate_cranes(vessel, berths_by_id[assignment["berth_id"]]),
+                yard_zone_id=yard_allocations[assignment["vessel_id"]]["yard_zone_id"],
+                yard_allocated_teu=yard_allocations[assignment["vessel_id"]]["allocated_teu"],
+                yard_capacity_shortfall_teu=yard_allocations[assignment["vessel_id"]].get(
+                    "capacity_shortfall_teu", 0
+                ),
             )
         )
     return TimelineResponse(
@@ -157,4 +170,29 @@ def get_hotspots(
         as_of=observation_time,
         horizon_hours=horizon_hours,
         items=sorted(items, key=lambda item: item.score, reverse=True),
+    )
+
+
+@router.post("/supervisor-summary", response_model=SupervisorSummaryResponse)
+def supervisor_summary(request: SupervisorSummaryRequest) -> SupervisorSummaryResponse:
+    """Create a supervisor briefing locally or through IBM watsonx.ai."""
+    payload = [
+        {"kind": "assignment", **item} for item in request.assignments
+    ] + [
+        {"kind": "prediction", **item} for item in request.predictions
+    ] + [
+        {"kind": "route_recommendation", "vessel_id": vessel_id, "options": options}
+        for vessel_id, options in request.route_recommendations.items()
+    ]
+    messages = build_shift_supervisor_prompt(payload)
+    if not request.live:
+        return SupervisorSummaryResponse(mode="prompt", messages=messages)
+    try:
+        summary = generate_watsonx_summary(messages)
+    except (RuntimeError, ValueError) as error:
+        raise HTTPException(status_code=502, detail=str(error)) from error
+    return SupervisorSummaryResponse(
+        mode="watsonx",
+        messages=messages,
+        summary=summary,
     )

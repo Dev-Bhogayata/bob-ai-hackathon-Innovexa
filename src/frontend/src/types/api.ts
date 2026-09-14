@@ -9,6 +9,10 @@ export interface TimelineItem {
   wait_hours: number;
   teu_capacity: number;
   status: string;
+  crane_ids: string[];
+  yard_zone_id: string | null;
+  yard_allocated_teu: number | null;
+  yard_capacity_shortfall_teu: number;
 }
 
 export interface TimelineResponse {

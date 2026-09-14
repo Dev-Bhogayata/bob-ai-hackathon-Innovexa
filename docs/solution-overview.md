@@ -16,3 +16,9 @@ hotspot heatmap.
 The design favors explainability: every score exposes its factors, every
 optimization result is constraint-checked, and every agent step can be logged
 as JSONL for review.
+
+For live operations, the API explicitly allocates crane IDs per berth and
+checks vessel TEU against compatible yard-zone headroom. Supervisor summaries
+can be sent through the IBM watsonx.ai adapter using environment-based
+credentials; missing credentials fail clearly instead of silently returning a
+mock response.

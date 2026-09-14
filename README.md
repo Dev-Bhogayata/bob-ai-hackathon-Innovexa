@@ -27,6 +27,8 @@ briefing prompt. Its FastAPI contracts feed a React operations console with a
 - Constraint-safe OR-Tools berth assignment with a toy-case regression suite
 - Rule-based alternate-port ranking using distance and available capacity
 - React dashboard with the two judge-facing operational views
+- `POST /api/v1/supervisor-summary` for local prompt generation or opt-in
+  IBM watsonx.ai briefings
 - Structured JSONL reasoning trace and Bob-assisted development log
 
 ## Tech Stack
@@ -48,10 +50,12 @@ Follow the complete reproducible instructions in
 ## Known Limitations
 
 The training outcomes are synthetic placeholders and must be replaced with
-observed port delay history before production use. The LLM integration creates
-provider-neutral messages; a deployment still needs an approved model
-provider and credentials. The demo currently runs locally rather than from a
-deployed public URL.
+observed port delay history before production use. Timeline responses expose
+yard capacity shortfalls as explicit `UNALLOCATED` risk rather than silently
+failing a shift plan. Set `WATSONX_URL`, `WATSONX_API_KEY`, and
+`WATSONX_PROJECT_ID` to enable live supervisor briefings; credentials are
+never bundled. The demo currently runs locally rather than from a deployed
+public URL.
 
 ## What We Are Most Proud Of
 

@@ -50,7 +50,7 @@ export function Timeline({ data }: TimelineProps) {
                         className={`vessel-bar ${item.status}`}
                         key={item.vessel_id}
                         style={{ left: `${left}px`, width: `${width}px` }}
-                        title={`${item.vessel_id} | ${item.priority} | ${item.wait_hours}h wait`}
+                        title={`${item.vessel_id} | ${item.priority} | ${item.wait_hours}h wait | cranes: ${item.crane_ids.join(", ")} | yard: ${item.yard_zone_id ?? "unassigned"} | shortfall: ${item.yard_capacity_shortfall_teu} TEU`}
                       >
                         <b>{item.vessel_id}</b>
                         <small>{item.wait_hours > 0 ? `${item.wait_hours}h wait` : "on time"}</small>

@@ -9,6 +9,10 @@
 
 No external account or API key is required for the local demo.
 
+For live watsonx.ai supervisor summaries, set `WATSONX_URL`,
+`WATSONX_API_KEY`, `WATSONX_PROJECT_ID`, and optionally `WATSONX_MODEL_ID` in
+`.env`. Never commit the API key.
+
 ## Install
 
 From the repository root:
