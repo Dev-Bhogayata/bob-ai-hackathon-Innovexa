@@ -38,6 +38,17 @@ h1 em { color: #51d4c3; font-style: normal; }
 .hero-stats strong { display: block; color: #f6fafc; font-size: 30px; }
 .hero-stats span { color: #8ca5b7; font-size: 11px; }
 .dashboard-grid { display: grid; gap: 20px; grid-template-columns: minmax(0, 1.55fr) minmax(340px, .85fr); }
+.scenario-panel { margin-bottom: 20px; }
+.scenario-panel form { display: grid; gap: 18px; }
+.form-section { padding: 16px; border: 1px solid #214158; border-radius: 10px; background: rgba(7, 19, 31, .45); }
+.form-section h3 { margin: 0 0 14px; color: #edf6fa; font-size: 14px; }
+.form-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.form-grid label, .form-section > label { display: grid; gap: 6px; color: #8ca5b7; font-size: 11px; }
+.form-grid input, .form-grid select, .form-section > label input { width: 100%; border: 1px solid #31536a; border-radius: 6px; padding: 9px; color: #d9e7f2; background: #0b2233; }
+.checkbox { display: flex !important; grid-template-columns: auto 1fr !important; align-items: center; margin-top: 14px; }
+.checkbox input { width: auto !important; }
+.primary-action { justify-self: start; color: #07131f; background: #51d4c3; border-color: #51d4c3; font-weight: 800; }
+.primary-action:disabled { cursor: wait; opacity: .55; }
 .panel { min-width: 0; padding: 22px; border: 1px solid #214158; border-radius: 16px; background: rgba(10, 29, 44, .82); box-shadow: 0 18px 50px rgba(0,0,0,.15); }
 .panel-heading { display: flex; justify-content: space-between; align-items: start; gap: 20px; margin-bottom: 24px; }
 h2 { margin: 0; color: #f6fafc; font-size: 20px; letter-spacing: -.03em; }
@@ -71,5 +82,5 @@ h2 { margin: 0; color: #f6fafc; font-size: 20px; letter-spacing: -.03em; }
 code { color: #51d4c3; }
 footer { padding-top: 30px; color: #587286; font-size: 11px; }
 footer span { margin: 0 7px; color: #31536a; }
-@media (max-width: 900px) { .hero { display: block; } .hero-stats { margin-top: 34px; } .dashboard-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .hero { display: block; } .hero-stats { margin-top: 34px; } .dashboard-grid { grid-template-columns: 1fr; } .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .app-shell { padding: 0 16px 24px; } .topbar-meta { font-size: 0; } .topbar-meta button { font-size: 13px; } .hero { padding: 42px 0 30px; } .hero-stats { gap: 12px; } .hero-stats div { min-width: 88px; padding-left: 10px; } .heatmap-grid { grid-template-columns: 1fr; } }

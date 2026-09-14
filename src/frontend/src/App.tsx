@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { HotspotHeatmap } from "./components/HotspotHeatmap";
 import { Timeline } from "./components/Timeline";
+import { ScenarioForm } from "./components/ScenarioForm";
 import { fetchHotspots, fetchTimeline, postHotspots, postTimeline } from "./services/api";
 import type { HotspotResponse, TimelineResponse } from "./types/api";
 import "./styles.css";
@@ -42,6 +43,7 @@ export default function App() {
         window_start: windowStart,
         window_end: scenario.window_end ?? new Date(new Date(windowStart).getTime() + 72 * 3600000).toISOString(),
       };
+
       const timelineData = await postTimeline(request);
       const hotspotData = await postHotspots({
         scenario: request.scenario,
@@ -53,6 +55,25 @@ export default function App() {
       setScenarioName(file.name);
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Unable to load scenario");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const runScenario = async (payload: unknown, label: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const request = payload as { scenario: unknown; window_start: string };
+      const [timelineData, hotspotData] = await Promise.all([
+        postTimeline(payload),
+        postHotspots({ scenario: request.scenario, as_of: request.window_start, horizon_hours: 24 }),
+      ]);
+      setTimeline(timelineData);
+      setHotspots(hotspotData);
+      setScenarioName(label);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Unable to plan scenario");
     } finally {
       setLoading(false);
     }
@@ -83,6 +104,7 @@ export default function App() {
           <div><strong>{delayedCount}</strong><span>waiting vessels</span></div>
         </div>
       </section>
+      <ScenarioForm onSubmit={runScenario} disabled={loading} />
       {loading && <div className="state-card">Loading live operations data...</div>}
       {error && <div className="state-card error">{error}. Start the API with <code>uvicorn src.backend.app.main:app --reload</code>.</div>}
       {!loading && !error && timeline && hotspots && (
