@@ -1,0 +1,40 @@
+{
+  "window_start": "2026-01-01T00:00:00+00:00",
+  "window_end": "2026-01-04T00:00:00+00:00",
+  "scenario": {
+    "vessels": [
+      {
+        "vessel_id": "LIVE-001",
+        "vessel_name": "Example Trader",
+        "eta": "2026-01-01T04:00:00+00:00",
+        "etd": "2026-01-02T04:00:00+00:00",
+        "teu_capacity": 4200,
+        "vessel_length_m": 280,
+        "draft_m": 11.5,
+        "required_cranes": 3,
+        "cargo_type": "containers",
+        "priority": "priority"
+      }
+    ],
+    "berths": [
+      {
+        "berth_id": "LIVE-B01",
+        "berth_name": "Example berth",
+        "max_vessel_length_m": 320,
+        "min_depth_m": 13,
+        "assigned_crane_count": 4
+      }
+    ],
+    "yard_zones": [
+      {
+        "zone_id": "LIVE-Y01",
+        "zone_name": "Example container yard",
+        "cargo_type": "containers",
+        "capacity_teu": 10000,
+        "current_fill_pct": 35,
+        "reefer_plug_count": 20
+      }
+    ],
+    "shocks": []
+  }
+}

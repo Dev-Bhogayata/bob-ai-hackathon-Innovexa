@@ -68,6 +68,28 @@ python src/data/generate_data.py --seed 42
 python src/ml/train_delay_model.py --seed 42
 ```
 
+## Plan a real user scenario
+
+The dashboard's **Load scenario JSON** action sends a caller-provided
+scenario to `POST /api/v1/timeline`. Start with
+[`examples/live-scenario.json`](../examples/live-scenario.json), then replace
+the vessel, berth, yard, and shock values with the port's current data. Every
+timestamp must include a timezone. The endpoint validates IDs, physical
+constraints, capacities, priorities, and the planning window before returning
+the 72-hour Gantt data.
+
+For programmatic clients:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/timeline \
+  -H 'Content-Type: application/json' \
+  --data @examples/live-scenario.json
+```
+
+CSV and SQLite exports from the generator are useful as source data, but
+should be transformed into the JSON contract above before submission. Do not
+send credentials or personally identifiable information in scenario files.
+
 ## Troubleshooting
 
 | Symptom | Fix |

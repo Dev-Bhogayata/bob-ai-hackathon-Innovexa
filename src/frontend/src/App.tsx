@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { HotspotHeatmap } from "./components/HotspotHeatmap";
 import { Timeline } from "./components/Timeline";
-import { fetchHotspots, fetchTimeline } from "./services/api";
+import { fetchHotspots, fetchTimeline, postHotspots, postTimeline } from "./services/api";
 import type { HotspotResponse, TimelineResponse } from "./types/api";
 import "./styles.css";
 
@@ -12,6 +12,7 @@ export default function App() {
   const [hotspots, setHotspots] = useState<HotspotResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [scenarioName, setScenarioName] = useState("Seeded demo scenario");
 
   const loadDashboard = useCallback(async () => {
     setLoading(true);
@@ -30,6 +31,33 @@ export default function App() {
     }
   }, []);
 
+  const loadScenario = async (file: File) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const scenario = JSON.parse(await file.text());
+      const windowStart = scenario.window_start ?? DEMO_START;
+      const request = {
+        scenario: scenario.scenario ?? scenario,
+        window_start: windowStart,
+        window_end: scenario.window_end ?? new Date(new Date(windowStart).getTime() + 72 * 3600000).toISOString(),
+      };
+      const timelineData = await postTimeline(request);
+      const hotspotData = await postHotspots({
+        scenario: request.scenario,
+        as_of: windowStart,
+        horizon_hours: 24,
+      });
+      setTimeline(timelineData);
+      setHotspots(hotspotData);
+      setScenarioName(file.name);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Unable to load scenario");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     void loadDashboard();
   }, [loadDashboard]);
@@ -41,11 +69,11 @@ export default function App() {
     <main className="app-shell">
       <header className="topbar">
         <div className="brand"><span className="brand-mark">PF</span><span>PortFlow</span></div>
-        <div className="topbar-meta"><span className="live-dot" /> Operations console <button onClick={() => void loadDashboard()}>Refresh</button></div>
+        <div className="topbar-meta"><span className="live-dot" /> Operations console <label className="upload-button">Load scenario JSON<input type="file" accept="application/json,.json" onChange={(event) => { const file = event.target.files?.[0]; if (file) void loadScenario(file); }} /></label><button onClick={() => void loadDashboard()}>Demo</button></div>
       </header>
       <section className="hero">
         <div>
-          <p className="eyebrow">SHIFT SUPERVISOR VIEW / 01 JAN 2026</p>
+          <p className="eyebrow">SHIFT SUPERVISOR VIEW / {scenarioName}</p>
           <h1>Make the next move <em>before</em> congestion does.</h1>
           <p className="hero-copy">AI-assisted berth planning, delay prediction, and routing recommendations in one operational picture.</p>
         </div>

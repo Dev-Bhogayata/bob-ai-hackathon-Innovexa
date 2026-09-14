@@ -8,6 +8,20 @@
 body { margin: 0; min-width: 320px; background: radial-gradient(circle at 78% 0%, #12324a 0, #07131f 38rem); }
 button { cursor: pointer; border: 1px solid #31536a; border-radius: 8px; padding: 8px 14px; color: #d9e7f2; background: #10283a; }
 button:hover { border-color: #51d4c3; color: #51d4c3; }
+
+.upload-button {
+  cursor: pointer;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  color: var(--ink);
+  background: var(--panel);
+  font-size: 0.78rem;
+}
+
+.upload-button input {
+  display: none;
+}
 .app-shell { max-width: 1500px; margin: 0 auto; padding: 0 32px 30px; }
 .topbar { height: 76px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #214158; }
 .brand { display: flex; gap: 10px; align-items: center; color: #f6fafc; font-size: 20px; font-weight: 750; letter-spacing: -.03em; }

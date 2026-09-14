@@ -19,3 +19,31 @@ export function fetchHotspots(asOf: string): Promise<HotspotResponse> {
     `/api/v1/hotspots?as_of=${encodeURIComponent(asOf)}&horizon_hours=24&seed=42`,
   );
 }
+
+export function postTimeline(payload: unknown): Promise<TimelineResponse> {
+  return fetch(`${apiBase}/api/v1/timeline`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  }).then(async (response) => {
+    if (!response.ok) {
+      const detail = await response.text();
+      throw new Error(`PortFlow API returned ${response.status}: ${detail}`);
+    }
+    return response.json() as Promise<TimelineResponse>;
+  });
+}
+
+export function postHotspots(payload: unknown): Promise<HotspotResponse> {
+  return fetch(`${apiBase}/api/v1/hotspots`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  }).then(async (response) => {
+    if (!response.ok) {
+      const detail = await response.text();
+      throw new Error(`PortFlow API returned ${response.status}: ${detail}`);
+    }
+    return response.json() as Promise<HotspotResponse>;
+  });
+}
