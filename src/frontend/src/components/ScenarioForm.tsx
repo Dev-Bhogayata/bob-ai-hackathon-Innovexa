@@ -128,7 +128,7 @@ export function ScenarioForm({ onSubmit, disabled }: ScenarioFormProps) {
                 ["draft_m", "Draft (m)", "number"],
                 ["required_cranes", "Required cranes", "number"],
               ] as const).map(([key, label, type]) => (
-                <label key={key}>{label}<input type={type} value={vessel[key]} onChange={(event) => updateVessel(index, key, event.target.value)} required={key !== "vessel_name"} min={type === "number" ? "0" : undefined} /></label>
+                <label key={key}>{label}<input type={type} value={vessel[key]} onChange={(event) => updateVessel(index, key, event.target.value)} required={key !== "vessel_name"} min={type === "number" ? "0" : undefined} step={key === "draft_m" ? "0.1" : "1"} /></label>
               ))}
               <label>Cargo type<select value={vessel.cargo_type} onChange={(event) => updateVessel(index, "cargo_type", event.target.value)}><option>containers</option><option>reefer</option><option>bulk</option><option>vehicles</option><option>project_cargo</option></select></label>
               <label>Priority<select value={vessel.priority} onChange={(event) => updateVessel(index, "priority", event.target.value)}><option>standard</option><option>priority</option><option>critical</option></select></label>
